@@ -35,11 +35,11 @@ func (l *Lib) load() (uintptr, error) {
 		purego.RegisterLibFunc(&compress, once.handle, "OodleLZ_Compress")
 		purego.RegisterLibFunc(&decompress, once.handle, "OodleLZ_Decompress")
 		purego.RegisterLibFunc(
-			&getCompressionLevelName,
+			&compressionLevelGetName,
 			once.handle,
 			"OodleLZ_CompressionLevel_GetName",
 		)
-		purego.RegisterLibFunc(&getCompressorName, once.handle, "OodleLZ_Compressor_GetName")
+		purego.RegisterLibFunc(&compressorGetName, once.handle, "OodleLZ_Compressor_GetName")
 	})
 
 	return once.handle, once.err
