@@ -1,0 +1,1 @@
+sha256sum ./* > oodle-libs-sha256
