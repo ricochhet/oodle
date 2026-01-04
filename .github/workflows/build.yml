@@ -50,7 +50,7 @@ jobs:
 
       - name: build
         run: |
-          go build ./cmd/london2038patcher
+          go build ./cmd/oodle
 
       - name: test
         run: |
