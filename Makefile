@@ -52,8 +52,8 @@ png-to-icos:
 
 .PHONY: copy-libs
 copy-libs:
-	cp -r libs/liboo2corelinux64.so.9 build/liboo2corelinux64.so.9
-	cp -r libs/oo2core_9_win64.dll build/oo2core_9_win64.dll
+#	cp -r libs/liboo2corelinux64.so.9 build/liboo2corelinux64.so.9
+#	cp -r libs/oo2core_9_win64.dll build/oo2core_9_win64.dll
 
 .PHONY: oodle-linux
 oodle-linux: copy-libs fmt

@@ -74,7 +74,7 @@ func NewDefaultCompressor() *Compressor {
 
 // Compress compresses the input buffer.
 func (c *Compressor) Compress(input []byte) ([]byte, error) {
-	_, err := lib.load()
+	_, err := LoadLib.load()
 	if err != nil {
 		return nil, err
 	}
@@ -113,7 +113,7 @@ func (c *Compressor) Compress(input []byte) ([]byte, error) {
 
 // CompressionLevelGetName gets the name of the compression level integer.
 func CompressionLevelGetName(level int) (string, error) {
-	_, err := lib.load()
+	_, err := LoadLib.load()
 	if err != nil {
 		return "", err
 	}
@@ -128,7 +128,7 @@ func CompressionLevelGetName(level int) (string, error) {
 
 // CompressorGetName gets the name of the compressor integer.
 func CompressorGetName(name int) (string, error) {
-	_, err := lib.load()
+	_, err := LoadLib.load()
 	if err != nil {
 		return "", err
 	}

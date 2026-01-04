@@ -31,7 +31,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	switch os.Args[1] {
+	if flags.Unpack {
+		_ = flags.unpack()
+	}
+
+	if flag.NArg() == 0 {
+		usage()
+	}
+
+	switch flag.Args()[0] {
 	case "compress":
 		_ = flags.compress()
 	case "decompress":

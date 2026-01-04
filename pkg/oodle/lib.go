@@ -13,7 +13,7 @@ type Lib struct {
 	Paths []string
 }
 
-var lib = NewLib()
+var LoadLib = NewLib()
 
 // NewLib creates a new Lib with values defined per OS.
 func NewLib() *Lib {
@@ -28,8 +28,8 @@ var (
 	compressorGetName       func(int) uintptr
 )
 
-// resolveLibPath resolves the possible paths for the library.
-func (l *Lib) resolveLibPath() (string, error) {
+// ResolveLibPath resolves the possible paths for the library.
+func (l *Lib) ResolveLibPath() (string, error) {
 	for _, p := range l.Paths {
 		_, err := os.Stat(p)
 		if !os.IsNotExist(err) {

@@ -18,7 +18,7 @@ var once struct {
 // load loads the library.
 func (l *Lib) load() (uintptr, error) {
 	once.Do(func() {
-		lib, err := l.resolveLibPath()
+		lib, err := l.ResolveLibPath()
 		if err != nil {
 			once.err = err
 			return

@@ -50,7 +50,7 @@ func NewDefaultDecompressor() *Decompressor {
 
 // Decompress decompresses the input buffer with the specified size.
 func (d *Decompressor) Decompress(input []byte, bufSize int64) ([]byte, error) {
-	_, err := lib.load()
+	_, err := LoadLib.load()
 	if err != nil {
 		return nil, err
 	}

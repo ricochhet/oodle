@@ -3,6 +3,8 @@ package main
 import "flag"
 
 type Flags struct {
+	Unpack bool
+
 	Input      string
 	Output     string
 	Compressor string
@@ -29,6 +31,7 @@ func init() {
 
 // registerFlags registers all flags to the flagset.
 func registerFlags(fs *flag.FlagSet, f *Flags) {
+	fs.BoolVar(&f.Unpack, "u", true, "unpack embedded library")
 	fs.StringVar(&f.Input, "i", "", "input file")
 	fs.StringVar(&f.Output, "o", "", "output file")
 	fs.StringVar(&f.Compressor, "c", "kraken", "compressor")
