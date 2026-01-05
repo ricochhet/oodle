@@ -10,6 +10,7 @@ type Flags struct {
 	Compressor string
 	Level      string
 	Size       int64
+	DirExt     string
 
 	FuzzSafe  int
 	CheckCRC  int
@@ -37,6 +38,7 @@ func registerFlags(fs *flag.FlagSet, f *Flags) {
 	fs.StringVar(&f.Compressor, "c", "kraken", "compressor")
 	fs.StringVar(&f.Level, "l", "optimal", "compression level")
 	fs.Int64Var(&f.Size, "s", -1, "original uncompressed size")
+	fs.StringVar(&f.DirExt, "e", ".oodle", "directory extension")
 	fs.IntVar(&f.FuzzSafe, "fs", 0, "fuzz safe")
 	fs.IntVar(&f.CheckCRC, "crc", 0, "check crc")
 	fs.IntVar(&f.Verbosity, "v", 0, "verbosity")

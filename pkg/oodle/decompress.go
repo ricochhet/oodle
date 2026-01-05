@@ -3,6 +3,8 @@ package oodle
 import (
 	"errors"
 	"unsafe"
+
+	"github.com/ricochhet/oodle/pkg/fsutil"
 )
 
 const (
@@ -49,7 +51,22 @@ func NewDefaultDecompressor() *Decompressor {
 }
 
 // Decompress decompresses the input buffer with the specified size.
-func (d *Decompressor) Decompress(input []byte, bufSize int64) ([]byte, error) {
+func (d *Decompressor) Decompress(input, output string, bufSize int64) error {
+	i, err := fsutil.Read(input)
+	if err != nil {
+		return err
+	}
+
+	b, err := d.decompress(i, bufSize)
+	if err != nil {
+		return err
+	}
+
+	return fsutil.Write(output, b)
+}
+
+// Decompress decompresses the input buffer with the specified size.
+func (d *Decompressor) decompress(input []byte, bufSize int64) ([]byte, error) {
 	_, err := LoadLib.load()
 	if err != nil {
 		return nil, err

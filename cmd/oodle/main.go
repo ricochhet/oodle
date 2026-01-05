@@ -41,9 +41,9 @@ func main() {
 
 	switch flag.Args()[0] {
 	case "compress":
-		_ = flags.compress()
+		exitOnErr(flags.compress())
 	case "decompress":
-		_ = flags.decompress()
+		exitOnErr(flags.decompress())
 	case "version":
 		fmt.Fprint(os.Stdout, version())
 		os.Exit(0)
@@ -58,11 +58,6 @@ func (f *Flags) compress() error {
 		usage()
 	}
 
-	input, err := os.ReadFile(f.Input)
-	if err != nil {
-		return err
-	}
-
 	name, err := oodle.CompressorToInt(f.Compressor)
 	if err != nil {
 		return err
@@ -74,27 +69,18 @@ func (f *Flags) compress() error {
 	}
 
 	compressor := oodle.Compressor{
-		Name:  name,
-		Level: level,
+		Name:   name,
+		Level:  level,
+		DirExt: flags.DirExt,
 	}
 
-	output, err := compressor.Compress(input)
-	if err != nil {
-		return err
-	}
-
-	return os.WriteFile(f.Output, output, 0o644)
+	return compressor.Compress(f.Input, f.Output)
 }
 
 // decompress command.
 func (f *Flags) decompress() error {
 	if f.Input == "" || f.Output == "" || f.Size <= 0 {
 		usage()
-	}
-
-	input, err := os.ReadFile(f.Input)
-	if err != nil {
-		return err
 	}
 
 	decompressor := oodle.Decompressor{
@@ -104,10 +90,14 @@ func (f *Flags) decompress() error {
 		Decode:    uintptr(flags.Decode),
 	}
 
-	output, err := decompressor.Decompress(input, f.Size)
-	if err != nil {
-		return err
+	return decompressor.Decompress(f.Input, f.Output, f.Size)
+}
+
+func exitOnErr(e error) {
+	if e == nil {
+		return
 	}
 
-	return os.WriteFile(f.Output, output, 0o644)
+	fmt.Fprintf(os.Stderr, "err: %v\n", e)
+	os.Exit(1)
 }

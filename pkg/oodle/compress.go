@@ -5,8 +5,12 @@ import "C"
 import (
 	"errors"
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 	"unsafe"
+
+	"github.com/ricochhet/oodle/pkg/fsutil"
 )
 
 const (
@@ -60,8 +64,9 @@ const (
 )
 
 type Compressor struct {
-	Name  int
-	Level int
+	Name   int
+	Level  int
+	DirExt string
 }
 
 // NewDefaultCompressor creates a default Decompressor with predefined values.
@@ -72,8 +77,66 @@ func NewDefaultCompressor() *Compressor {
 	}
 }
 
+// Compress compresses the input path to the output path.
+func (c *Compressor) Compress(input, output string) error {
+	t, err := fsutil.IsDirOrFile(input)
+	if err != nil {
+		return err
+	}
+
+	switch t {
+	case fsutil.File:
+		return c.compressFile(input, output)
+	case fsutil.Dir:
+		return c.compressDir(input, output)
+	default:
+		return nil
+	}
+}
+
+// compressFile reads the input path and writes the compressed version to output.
+func (c *Compressor) compressFile(input, output string) error {
+	i, err := fsutil.Read(input)
+	if err != nil {
+		return err
+	}
+
+	b, err := c.compress(i)
+	if err != nil {
+		return err
+	}
+
+	return fsutil.Write(output, b)
+}
+
+// compressDir reads the input path and writes the compressed files to the output path.
+func (c *Compressor) compressDir(input, output string) error {
+	return filepath.WalkDir(input, func(path string, d os.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+
+		rel, err := filepath.Rel(input, path)
+		if err != nil {
+			return err
+		}
+
+		full := filepath.Join(output, rel)
+
+		if d.IsDir() {
+			return os.MkdirAll(full, 0o755)
+		}
+
+		if !d.Type().IsRegular() {
+			return nil
+		}
+
+		return c.compressFile(path, full+c.DirExt)
+	})
+}
+
 // Compress compresses the input buffer.
-func (c *Compressor) Compress(input []byte) ([]byte, error) {
+func (c *Compressor) compress(input []byte) ([]byte, error) {
 	_, err := LoadLib.load()
 	if err != nil {
 		return nil, err
